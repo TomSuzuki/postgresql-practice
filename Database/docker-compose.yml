@@ -1,0 +1,11 @@
+version: '3.7'
+services:
+  db:
+    image: postgres:alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+      TZ: "Asia/Tokyo"
+    ports:
+      - 15432:5432
