@@ -37,12 +37,12 @@ create table memos (
     memo_id uuid not null default gen_random_uuid()
     , title text not null
     , body text not null default ''
-    , created_at timestamp without time zone not null default now()
-    , updated_at timestamp without time zone not null default now()
-    , deleted_at timestamp without time zone default null
+    , created_at timestamp without time zone not null default now()  -- 共通列（作成日時）
+    , updated_at timestamp without time zone not null default now()  -- 共通列（更新日時）
+    , deleted_at timestamp without time zone default null  -- 共通列（削除日時）
     , primary key (memo_id)
 );
-create trigger update_memos_1 before update on memos for each row execute procedure update_trigger(); 
+create trigger update_memos_1 before update on memos for each row execute procedure update_trigger();
 create trigger update_memos_2 after update on memos for each row execute procedure update_history(); 
 
 -- メモ履歴
@@ -52,10 +52,13 @@ create table memos_history (
     , memo_id uuid not null
     , title text not null
     , body text not null default ''
+    , history_at timestamp without time zone not null default now()  -- 履歴系の共通列
     , created_at timestamp without time zone not null default now()
-    , history_at timestamp without time zone not null default now()
+    , updated_at timestamp without time zone not null default now()
+    , deleted_at timestamp without time zone default null
     , primary key (memos_history_id)
 );
+create trigger update_memos_history_1 before update on memos_history for each row execute procedure update_trigger();
 
 -- タグリスト
 drop table if exists tag_list;

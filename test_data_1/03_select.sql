@@ -16,6 +16,14 @@ select
     ) as tag
     , memos.created_at
     , memos.updated_at
+    , (
+        select
+            count(*)
+        from memos_history
+        where
+                memos_history.deleted_at is null
+            and memos_history.memo_id = memos.memo_id
+    ) as history_num
 from memos
 where
     memos.deleted_at is null

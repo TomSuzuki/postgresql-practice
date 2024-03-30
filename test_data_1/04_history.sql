@@ -11,7 +11,9 @@ with note as (
         , memos.body
         , memos.updated_at as history_at
     from memos
-    where memos.title = 'ラーメン'
+    where
+            memos.title = 'ラーメン'
+        and memos.deleted_at is null
 
     union
     select
@@ -19,8 +21,12 @@ with note as (
         , memos_history.body
         , memos_history.history_at
     from memos
-    inner join memos_history using(memo_id)
-    where memos.title = 'ラーメン'
+    inner join memos_history on
+            memos_history.deleted_at is null
+        and memos_history.memo_id = memos.memo_id
+    where
+            memos.title = 'ラーメン'
+        and memos.deleted_at is null
 )
 
 select
