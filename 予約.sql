@@ -1,11 +1,11 @@
 
--- 更新トリガ（sys_updatetd_datetimeを更新する）
+-- 更新トリガ（updated_atを更新する）
 -- 参考: https://blog.kumano-te.com/activities/auto-update-last-updated-at-postgresql
 -- 参考: https://kaede.jp/2015/09/25012107/
 create or replace function update_trigger() returns trigger as $$
 begin
     if (TG_OP = 'UPDATE') then
-        NEW.sys_updatetd_datetime := clock_timestamp();  -- now() → トランザクションの開始時間 / clock_timestamp() → 実行された時間
+        NEW.updated_at := clock_timestamp();  -- now() → トランザクションの開始時間 / clock_timestamp() → 実行された時間
         return NEW;
     end if;
 end;
@@ -18,9 +18,9 @@ create table request_managements (
     , request_datetime timestamp without time zone not null
     , usage_date date not null
     , request_status varchar(1) not null default '1'
-    , sys_inserted_datetime timestamp without time zone not null default now()
-    , sys_updatetd_datetime timestamp without time zone not null default now()
-    , sys_is_deleted boolean not null default false
+    , created_at timestamp without time zone not null default now()
+    , updated_at timestamp without time zone not null default now()
+    , deleted_at timestamp without time zone default null
     , primary key (id)
 );
 create trigger update_request_managements_1 before update on request_managements for each row execute procedure update_trigger();  -- 更新トリガ
